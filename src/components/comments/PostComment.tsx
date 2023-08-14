@@ -1,7 +1,6 @@
 "use client";
 
 import { useOnClickOutside } from "@/hooks/use-on-click-outside";
-import { formatTimeToNow } from "@/lib/utils";
 import { CommentRequest } from "@/lib/validators/comment";
 import { Comment, CommentVote, User } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
@@ -17,6 +16,7 @@ import { Textarea } from "../ui/Textarea";
 import { toast } from "../../hooks/use-toast";
 import { useSession } from "next-auth/react";
 import Spinner from "../ui/Spinner";
+import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 
 type ExtendedComment = Comment & {
   votes: CommentVote[];
@@ -85,7 +85,7 @@ const PostComment: FC<PostCommentProps> = ({
           </p>
 
           <p className="max-h-40 truncate text-xs text-zinc-500">
-            {formatTimeToNow(new Date(comment.createdAt))}
+            {formatDistanceToNowStrict(new Date(comment.createdAt))}
           </p>
         </div>
       </div>
