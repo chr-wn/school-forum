@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { toast } from "../../hooks/use-toast";
 import { Button } from "../ui/Button";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 interface PostVoteClientProps {
   postId: string;
@@ -27,6 +27,7 @@ const PostVoteClient = ({
   const [votesAmt, setVotesAmt] = useState<number>(initialVotesAmt);
   const [currentVote, setCurrentVote] = useState(initialVote);
   const prevVote = usePrevious(currentVote);
+  const pathname = usePathname();
 
   // ensure sync with server
   useEffect(() => {
@@ -78,10 +79,17 @@ const PostVoteClient = ({
   });
 
   return (
-    <div className="flex justify-between items-center px-[2px] h-[24px] w-[86px]">
+    <div
+      className={`flex justify-between items-center px-[2px] h-[24px] w-[86px] ${
+        pathname.includes("/post") && "flex-col"
+      }`}
+    >
       {/* upvote */}
       <Button
-        onClick={() => vote("UP")}
+        onClick={(e) => {
+          e.stopPropagation();
+          vote("UP");
+        }}
         size="sm"
         variant="ghost"
         aria-label="upvote"
@@ -89,18 +97,21 @@ const PostVoteClient = ({
       >
         <ArrowBigUp
           className={`hover:text-emerald-500 ${
-            currentVote === "UP" && "fill-emerald-500"
+            currentVote === "UP" && "fill-emerald-500 text-emerald-500"
           }`}
           strokeWidth={1.5}
         />
       </Button>
 
       {/* score */}
-      <p className="text-center text-[12px] text-foreground">{votesAmt}</p>
+      <p className={`text-center text-[12px] text-foreground`}>{votesAmt}</p>
 
       {/* downvote */}
       <Button
-        onClick={() => vote("DOWN")}
+        onClick={(e) => {
+          e.stopPropagation();
+          vote("DOWN");
+        }}
         size="sm"
         variant="ghost"
         aria-label="downvote"
@@ -108,8 +119,8 @@ const PostVoteClient = ({
       >
         <ArrowBigDown
           onClick={() => vote("DOWN")}
-          className={`hover:text-red-500 ${
-            currentVote === "UP" && "fill-red-500"
+          className={`hover:text-yellow-500 ${
+            currentVote === "DOWN" && "fill-yellow-500 text-yellow-500"
           }`}
           strokeWidth={1.5}
         />

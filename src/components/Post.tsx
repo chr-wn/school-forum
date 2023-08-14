@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import EditorOutput from "./EditorOutput";
 import PostVoteClient from "./post-vote/PostVoteClient";
 import { Button } from "./ui/Button";
@@ -27,6 +27,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/HoverCard";
+import { useRouter } from "next/navigation";
 
 type PartialVote = Pick<Vote, "type">;
 
@@ -49,9 +50,16 @@ const Post: FC<PostProps> = ({
   commentAmt,
 }) => {
   const pRef = useRef<HTMLParagraphElement>(null);
+  const [showFullPost, setshowFullPost] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
-    <div className="block border-b">
+    <div
+      className="block border-b hover:bg-accent transition-colors"
+      onClick={() => {
+        router.push(`/categories/${categoryName}/post/${post.id}`);
+      }}
+    >
       <div className="pt-[8px] relative cursor-pointer">
         {/* post info */}
         <div className="flex flex-nowrap flex-row items-start justify-start mx-[8px] mb-[8px] relative text-[12px] font-normal leading-[16px]">
@@ -61,6 +69,9 @@ const Post: FC<PostProps> = ({
                 <Link
                   className="text-[12px] inline"
                   href={`/categories/${categoryName}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
                   <Image
                     src="/categoryicon.png"
@@ -79,6 +90,9 @@ const Post: FC<PostProps> = ({
                       <Link
                         href={`/categories/${categoryName}`}
                         className="hover:underline font-bold text-foreground"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       >
                         {categoryName}
                       </Link>
@@ -96,6 +110,9 @@ const Post: FC<PostProps> = ({
                         <Link
                           href={`/users/${post.authorId}`}
                           className="hover:underline mr-[3px]"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
                           {post.author.name}
                         </Link>
@@ -123,25 +140,34 @@ const Post: FC<PostProps> = ({
         {/* post title */}
         <div className="mx-[8px] ">
           <div className="inline relative break-words">
-            <Link href={`/categories/${categoryName}/post/${post.id}`}>
-              <div className="inline pr-[5px] break-words text-[18px] font-medium leading-[22px]">
-                <h3 className="inline">{post.title}</h3>
-              </div>
-            </Link>
+            <div className="inline pr-[5px] break-words text-[18px] font-medium leading-[22px]">
+              <h3 className="inline">{post.title}</h3>
+            </div>
           </div>
         </div>
 
         {/* post content */}
         <div className="mt-[8px]" ref={pRef}>
-          <Link href={`/categories/${categoryName}/post/${post.id}`}>
-            <div className="max-h-[250px] overflow-hidden pt-[5px] pb-[10px] px-[8px]">
-              <EditorOutput content={post.content} />
-              {pRef.current?.clientHeight === 250 && (
-                // blur bottom if content is too long
-                <div className="absolute bottom-[40px] left-0 h-24 w-full bg-gradient-to-t from-white to-transparent"></div>
-              )}
+          <div
+            className={`overflow-hidden pt-[5px] pb-[10px] px-[8px] ${
+              !showFullPost && "max-h-[250px]"
+            }`}
+          >
+            <EditorOutput content={post.content} />
+          </div>
+          {pRef.current?.clientHeight === 250 && !showFullPost && (
+            <div className="w-full flex items-center justify-center absolute bottom-[60px] left-0">
+              <Button
+                className="w-[200px] h-[25px] opacity-70"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setshowFullPost(true);
+                }}
+              >
+                Show Full Post
+              </Button>
             </div>
-          </Link>
+          )}
         </div>
 
         {/* post options */}
@@ -156,27 +182,40 @@ const Post: FC<PostProps> = ({
             <Link href={`/categories/${categoryName}/post/${post.id}`}>
               <Button
                 variant="ghost"
-                className="px-[4px] flex items-center gap-2 hover:text-muted-foreground"
+                className="px-[4px] flex items-center gap-2 hover:text-blue-500"
               >
                 <MessageSquare className="h-4 w-4" /> {commentAmt} comments
               </Button>
             </Link>
+
             <Button
               variant="ghost"
-              className="px-[4px] flex items-center gap-2 hover:text-muted-foreground"
+              className="px-[4px] flex items-center gap-2 hover:text-purple-500"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             >
               <Bookmark className="h-4 w-4" />
               Save
             </Button>
+
             <Button
               variant="ghost"
-              className="px-[4px] flex items-center gap-2 hover:text-muted-foreground"
+              className="px-[4px] flex items-center gap-2 hover:text-red-500"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             >
               <Flag className="h-4 w-4" />
               Report
             </Button>
+
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <MoreHorizontal />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="p-0 font-bold text-muted-foreground text-[12px]">
@@ -184,17 +223,13 @@ const Post: FC<PostProps> = ({
                   <Clipboard className="mr-2" />
                   Copy Link
                 </DropdownMenuItem>
-                <DropdownMenuItem className="focus:text-muted-foreground">
-                  <Clipboard className="mr-2" />
-                  Copy Link
-                </DropdownMenuItem>
-                <DropdownMenuItem className="focus:text-muted-foreground">
-                  <Clipboard className="mr-2" />
-                  Copy Link
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          <Link
+            className="flex grow"
+            href={`categories/${categoryName}/post/${post.id}`}
+          ></Link>
         </div>
       </div>
     </div>
