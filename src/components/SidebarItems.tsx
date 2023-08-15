@@ -5,18 +5,19 @@ import { FC } from "react";
 import { Button, buttonVariants } from "./ui/Button";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { SIDEBAR_ITEMS } from "@/config";
 import {
-  Home,
-  Search,
-  Bookmark,
-  Inbox,
-  User,
-  Palette,
+  Apple,
+  Film,
+  Music,
+  BookOpen,
+  Code,
+  Globe,
   Activity,
-  Monitor,
   Book,
+  Monitor,
+  Palette,
 } from "lucide-react";
-import { Apple, Film, Music, BookOpen, Code, Globe } from "lucide-react";
 import { ScrollArea } from "./ui/ScrollArea";
 
 interface SidebarItemsProps {}
@@ -24,36 +25,7 @@ interface SidebarItemsProps {}
 const SidebarItems: FC<SidebarItemsProps> = ({}) => {
   const pathname = usePathname();
 
-  const routes = useMemo(
-    () => [
-      {
-        label: "Home",
-        href: "/home",
-        icon: Home,
-      },
-      {
-        label: "Explore",
-        href: "/explore",
-        icon: Search,
-      },
-      {
-        label: "Messages",
-        href: "/messages",
-        icon: Inbox,
-      },
-      {
-        label: "Bookmarks",
-        href: "/bookmarks",
-        icon: Bookmark,
-      },
-      {
-        label: "Profile",
-        href: "/profile",
-        icon: User,
-      },
-    ],
-    []
-  );
+  const routes = useMemo(() => SIDEBAR_ITEMS, []);
 
   const categories = useMemo(
     () => [

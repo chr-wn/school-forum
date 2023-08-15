@@ -1,3 +1,4 @@
+import CustomFeed from "@/components/CustomFeed";
 import MiniCreatePost from "@/components/MiniCreatePost";
 import { getAuthSession } from "@/lib/auth";
 
@@ -7,7 +8,7 @@ const Home = async () => {
   return (
     <>
       <MiniCreatePost session={session} />
-      <div>Feed</div>
+      <CustomFeed />
     </>
   );
 };

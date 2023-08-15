@@ -11,6 +11,7 @@ import { toast } from "../../hooks/use-toast";
 import { Button } from "../ui/Button";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface PostVoteClientProps {
   postId: string;
@@ -27,7 +28,7 @@ const PostVoteClient = ({
   const [votesAmt, setVotesAmt] = useState<number>(initialVotesAmt);
   const [currentVote, setCurrentVote] = useState(initialVote);
   const prevVote = usePrevious(currentVote);
-  const pathname = usePathname();
+  const onPostPage = usePathname().includes("/post");
 
   // ensure sync with server
   useEffect(() => {
@@ -80,9 +81,10 @@ const PostVoteClient = ({
 
   return (
     <div
-      className={`flex justify-between items-center px-[2px] h-[24px] w-[86px] ${
-        pathname.includes("/post") && "flex-col"
-      }`}
+      className={cn(
+        "flex justify-between items-center px-[2px] h-[24px] w-[86px]",
+        `${onPostPage && "flex-col w-[60px] gap-2"}`
+      )}
     >
       {/* upvote */}
       <Button

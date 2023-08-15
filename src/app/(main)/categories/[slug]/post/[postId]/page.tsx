@@ -44,7 +44,7 @@ const CategoryPostPage = async ({ params }: CategoryPostPageProps) => {
 
   return (
     <div>
-      <div className="h-full flex flex-col sm:flex-row items-center sm:items-start justify-between">
+      <div className="h-full flex flex-col sm:flex-row items-center sm:items-start justify-between pt-4 pr-4">
         <Suspense fallback={<PostVoteShell />}>
           <PostVoteServer
             postId={post?.id ?? cachedPost.id}
@@ -61,7 +61,7 @@ const CategoryPostPage = async ({ params }: CategoryPostPageProps) => {
           />
         </Suspense>
 
-        <div className="sm:w-0 w-full flex-1 bg-white p-4 rounded-sm">
+        <div className="sm:w-0 w-full flex-1 bg-background rounded-sm">
           <p className="max-h-40 mt-1 truncate text-xs text-gray-500">
             Posted by {post?.author.name ?? cachedPost.authorName}{" "}
             {formatDistanceToNowStrict(
