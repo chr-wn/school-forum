@@ -23,7 +23,7 @@ const page = async ({ params }: pageProps) => {
       {/* heading */}
 
       {/* form */}
-      <PostCategorySelector />
+      {/* <PostCategorySelector /> */}
 
       <Editor categoryId={category.id} />
     </div>

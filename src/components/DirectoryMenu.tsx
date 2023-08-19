@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import {
@@ -19,11 +19,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover";
 import { SIDEBAR_ITEMS } from "@/config";
-import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { Category } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { ScrollArea } from "./ui/ScrollArea";
 
 interface SearchBarProps {
@@ -32,17 +31,7 @@ interface SearchBarProps {
 
 const SearchBar: FC<SearchBarProps> = ({ categories }) => {
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState<string>("");
   const pathname = usePathname();
-  const commandRef = useRef<HTMLDivElement>(null);
-
-  useOnClickOutside(commandRef, () => {
-    setInput("");
-  });
-
-  useEffect(() => {
-    setInput("");
-  }, [pathname]);
 
   function getPath() {
     const path = pathname.split("/");
@@ -100,20 +89,13 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[250px] p-0">
-          <Command
-            ref={commandRef}
-            className="relative rounded-lg border z-50 overflow-visible"
-          >
+          <Command className="relative rounded-lg border z-50 overflow-visible">
             <CommandInput
-              onValueChange={(text) => {
-                setInput(text);
-              }}
-              value={input}
               className="outline-none border-none focus:border-none focus:outline-none ring-0"
               placeholder="Filter"
             />
 
-            <ScrollArea>
+            <ScrollArea className={`${categories.length > 5 && "h-[250px]"}`}>
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Navigation">

@@ -1,7 +1,7 @@
-import { FC } from "react";
-import DirectoryMenu from "./DirectoryMenu";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { FC } from "react";
+import DirectoryMenu from "./DirectoryMenu";
 
 const Directory: FC = async () => {
   const session = await getAuthSession();
@@ -17,7 +17,7 @@ const Directory: FC = async () => {
 
   const categories = follows.map((follow) => follow.category);
 
-  return <DirectoryMenu categories={categories as []} />;
+  return <DirectoryMenu categories={categories} />;
 };
 
 export default Directory;
