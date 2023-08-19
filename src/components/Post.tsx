@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { Post, User, Vote } from "@prisma/client";
+import { Category, Post, User, Vote } from "@prisma/client";
 import formatDistanceToNowStrict from "date-fns/formatDistanceToNowStrict";
 import format from "date-fns/format";
 import {
@@ -37,7 +37,7 @@ interface PostProps {
     votes: Vote[];
   };
   votesAmt: number;
-  categoryName: string;
+  category: Category;
   currentVote?: PartialVote;
   commentAmt: number;
 }
@@ -46,10 +46,10 @@ const Post: FC<PostProps> = ({
   post,
   votesAmt: _votesAmt,
   currentVote: _currentVote,
-  categoryName,
+  category,
   commentAmt,
 }) => {
-  const pRef = useRef<HTMLParagraphElement>(null);
+  const pRef = useRef<HTMLDivElement>(null);
   const [showFullPost, setshowFullPost] = useState<boolean>(false);
   const router = useRouter();
 
@@ -57,29 +57,29 @@ const Post: FC<PostProps> = ({
     <div
       className="block border-b hover:bg-accent transition-colors"
       onClick={() => {
-        router.push(`/categories/${categoryName}/post/${post.id}`);
+        router.push(`/categories/${category.url}/post/${post.id}`);
       }}
     >
       <div className="pt-[8px] relative cursor-pointer">
         {/* post info */}
         <div className="flex flex-nowrap flex-row items-start justify-start mx-[8px] mb-[8px] relative text-[12px] font-normal leading-[16px]">
-          {categoryName && (
+          {category.name && (
             <>
-              <div className="basis-auto grow-0 shrink-0">
+              <div className="flex basis-auto grow-0 shrink-0">
                 <Link
-                  className="text-[12px] inline"
-                  href={`/categories/${categoryName}`}
+                  className="text-[12px] inline overflow-hidden h-[20px] w-[20px] justify-center items-center rounded-full mr-[8px]"
+                  href={`/categories/${category.url}`}
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
                 >
                   <Image
-                    src="/categoryicon.png"
-                    alt="Category Icon"
+                    src={category.image}
+                    alt="Icon"
                     height={20}
                     width={20}
                     sizes="100vw"
-                    className="inline-block mr-[4px]"
+                    className="h-full w-auto rounded-full object-cover"
                   />
                 </Link>
               </div>
@@ -88,16 +88,16 @@ const Post: FC<PostProps> = ({
                   <HoverCard>
                     <HoverCardTrigger asChild>
                       <Link
-                        href={`/categories/${categoryName}`}
+                        href={`/categories/${category.url}`}
                         className="hover:underline font-bold text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
                       >
-                        {categoryName}
+                        {category.name}
                       </Link>
                     </HoverCardTrigger>
-                    <HoverCardContent>View Community</HoverCardContent>
+                    <HoverCardContent>Category Info</HoverCardContent>
                   </HoverCard>
 
                   <span className="text-[6px] leading-[20px] mx-[4px] align-middle">
@@ -158,7 +158,7 @@ const Post: FC<PostProps> = ({
           {pRef.current?.clientHeight === 250 && !showFullPost && (
             <div className="w-full flex items-center justify-center absolute bottom-[60px] left-0">
               <Button
-                className="w-[200px] h-[25px] opacity-70"
+                className="w-[200px] h-[25px] opacity-80"
                 onClick={(e) => {
                   e.stopPropagation();
                   setshowFullPost(true);
@@ -179,7 +179,7 @@ const Post: FC<PostProps> = ({
             initialVote={_currentVote?.type}
           />
           <div className="flex -mr-[40px] pr-[8px] pl-[4px] font-bold items-stretch gap-5">
-            <Link href={`/categories/${categoryName}/post/${post.id}`}>
+            <Link href={`/categories/${category.name}/post/${post.id}`}>
               <Button
                 variant="ghost"
                 className="px-[4px] flex items-center gap-2 hover:text-blue-500"
@@ -228,7 +228,7 @@ const Post: FC<PostProps> = ({
           </div>
           <Link
             className="flex grow"
-            href={`categories/${categoryName}/post/${post.id}`}
+            href={`categories/${category.name}/post/${post.id}`}
           ></Link>
         </div>
       </div>

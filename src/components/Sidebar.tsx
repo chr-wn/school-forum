@@ -5,9 +5,21 @@ import { Icons } from "./ui/Icons";
 import SidebarItems from "./SidebarItems";
 import UserMenu from "./UserMenu";
 import { buttonVariants } from "./ui/Button";
+import { db } from "@/lib/db";
 
 export async function Sidebar() {
   const session = await getAuthSession();
+
+  const follows = await db.follow.findMany({
+    where: {
+      userId: session?.user.id,
+    },
+    select: {
+      category: true,
+    },
+  });
+
+  const categories = follows.map((follow) => follow.category);
 
   return (
     <div className="hidden lg:flex lg:w-[80px] xl:w-[250px] flex-col space-y-4 py-4 items-center justify-center xl:justify-start h-screen sticky top-0">
@@ -21,7 +33,7 @@ export async function Sidebar() {
         </Link>
       </div>
 
-      <SidebarItems />
+      <SidebarItems categories={categories} />
 
       <div className="flex grow"></div>
 

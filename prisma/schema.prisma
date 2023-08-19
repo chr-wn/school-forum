@@ -48,6 +48,7 @@ model User {
   name              String?
   email             String?    @unique
   emailVerified     DateTime?
+  isAdmin           Boolean    @default(false)
   createdCategories Category[] @relation("CreatedBy")
   follows           Follow[]
   votes             Vote[]
@@ -61,11 +62,14 @@ model User {
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts     Post[]
+  id          String   @id @default(cuid())
+  url         String   @unique
+  name        String
+  image       String   @default("/categoryicon.png")
+  description String   @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]
 
   creatorId String?
   Creator   User?    @relation("CreatedBy", fields: [creatorId], references: [id])

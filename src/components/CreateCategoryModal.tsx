@@ -20,16 +20,22 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Spinner from "./ui/Spinner";
+import { Textarea } from "./ui/Textarea";
 
 export default function CreateCategoryModal() {
   const router = useRouter();
   const [input, setInput] = useState<string>("");
+  const [url, setURL] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const { loginToast } = useCustomToasts();
 
   const { mutate: createCommunity, isLoading } = useMutation({
     mutationFn: async () => {
       const payload: CreateCategoryPayload = {
         name: input,
+        url: url,
+        image: "/categoryicon.png",
+        description: description,
       };
 
       const { data } = await axios.post("/api/category", payload);
@@ -39,16 +45,17 @@ export default function CreateCategoryModal() {
       if (err instanceof AxiosError) {
         if (err.response?.status === 409) {
           return toast({
-            title: "Category already exists.",
-            description: "Please choose a different name.",
+            title: "URL is taken.",
+            description: "Please choose a different url.",
             variant: "destructive",
           });
         }
 
         if (err.response?.status === 422) {
           return toast({
-            title: "Invalid category name.",
-            description: "Please choose a name between 3 and 21 letters.",
+            title: "Invalid category options",
+            description:
+              "The name cannot be more than 30 characters long and the description cannot be more than 500 characters long.",
             variant: "destructive",
           });
         }
@@ -78,12 +85,12 @@ export default function CreateCategoryModal() {
         <DialogHeader>
           <DialogTitle>Create Category</DialogTitle>
           <DialogDescription>
-            Community names including capitalization cannot be changed.
+            Category URLs cannot be changed.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
+            <Label htmlFor="name" className="text-right w-fit">
               Name
             </Label>
             <Input
@@ -91,13 +98,43 @@ export default function CreateCategoryModal() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="col-span-3"
+              maxLength={30}
+            />
+            <Label htmlFor="url" className="text-right w-fit">
+              URL
+            </Label>
+            <Input
+              id="url"
+              value={url}
+              onChange={(e) => setURL(e.target.value)}
+              className="col-span-3"
             />
           </div>
+          {url.length > 0 && <span>Location: acme.edu/categories/{url}</span>}
         </div>
+        <div className="flex">
+          <Label htmlFor="description" className="text-right w-fit">
+            Description
+          </Label>
+          <div className="grow"></div>
+          <span className="text-[12px]">{500 - description.length}/500</span>
+        </div>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="resize-none text-[15px] placeholder:text-[15px] focus:outline-none mb-4"
+          maxLength={500}
+        />
         <DialogFooter>
           <Button
             type="submit"
-            disabled={input.length === 0 || isLoading}
+            disabled={
+              input.length === 0 ||
+              url.length === 0 ||
+              description.length === 0 ||
+              isLoading
+            }
             onClick={() => createCommunity()}
           >
             {isLoading && <Spinner />}

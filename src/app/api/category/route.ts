@@ -12,12 +12,12 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name } = CategoryValidator.parse(body);
+    const { name, url, image, description } = CategoryValidator.parse(body);
 
     // check if category already exists
     const categoryExists = await db.category.findFirst({
       where: {
-        name,
+        url,
       },
     });
 
@@ -28,7 +28,10 @@ export async function POST(req: Request) {
     // create category and associate it with the user
     const category = await db.category.create({
       data: {
-        name,
+        name: name,
+        url: url,
+        image: image,
+        description: description,
         creatorId: session.user.id,
       },
     });
@@ -41,7 +44,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(category.name);
+    return new Response(category.url);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });

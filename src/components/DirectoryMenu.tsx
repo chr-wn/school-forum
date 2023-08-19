@@ -23,6 +23,7 @@ import { useOnClickOutside } from "@/hooks/use-on-click-outside";
 import { Category } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { ScrollArea } from "./ui/ScrollArea";
 
 interface SearchBarProps {
@@ -48,9 +49,39 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
     if (path.includes("submit")) {
       return "Create Post";
     } else if (path.includes("categories")) {
-      return path[2];
+      return (
+        <>
+          <div className="rounded-full overflow-hidden h-[25px] w-[25px]">
+            <Image
+              src={
+                categories.find((category) => {
+                  return category.url === path[2];
+                })?.image!
+              }
+              alt="Category Icon"
+              width={50}
+              height={50}
+              sizes="100vw"
+              className="h-full w-auto rounded-full object-cover"
+            />
+          </div>
+          {path[2]}
+        </>
+      );
     } else if (path.length === 2) {
-      return path[1].charAt(0).toUpperCase() + path[1].slice(1);
+      const Icon = SIDEBAR_ITEMS.find((item) => {
+        return (
+          item.label === path[1].charAt(0).toUpperCase() + path[1].slice(1)
+        );
+      })?.icon!;
+      return (
+        <div className="flex justify-start items-center">
+          <Icon className="xl:mr-2.5" strokeWidth={1} />
+          <span className="hidden xl:inline">
+            {path[1].charAt(0).toUpperCase() + path[1].slice(1)}
+          </span>
+        </div>
+      );
     }
   }
 
@@ -62,7 +93,7 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
             variant="ghost"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="w-[200px] justify-between items-center"
           >
             {getPath()}
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -98,16 +129,36 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
                     </CommandItem>
                   ))}
                 </CommandGroup>
-                <CommandSeparator />
-                <CommandGroup heading="Following">
-                  {categories.map((category) => (
-                    <CommandItem key={category.id}>
-                      <Link href={`/categories/${category.name}`}>
-                        {category.name}
-                      </Link>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                {categories.length > 0 && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup heading="Following">
+                      {categories.map((category) => (
+                        <CommandItem
+                          key={category.id}
+                          className="w-full h-full py-0"
+                        >
+                          <Link
+                            href={`/categories/${category.url}`}
+                            className="h-full w-full py-1.5 flex items-center"
+                          >
+                            <div className="rounded-full overflow-hidden h-[25px] w-[25px] mr-2">
+                              <Image
+                                src={category.image}
+                                alt="Category Icon"
+                                width={50}
+                                height={50}
+                                sizes="100vw"
+                                className="inline h-full w-auto rounded-full object-cover"
+                              />
+                            </div>
+                            {category.name}
+                          </Link>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </>
+                )}
               </CommandList>
             </ScrollArea>
           </Command>

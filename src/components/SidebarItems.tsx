@@ -1,87 +1,34 @@
 "use client";
 
-import Link from "next/link";
-import { FC } from "react";
-import { Button, buttonVariants } from "./ui/Button";
-import { usePathname } from "next/navigation";
-import { useMemo } from "react";
 import { SIDEBAR_ITEMS } from "@/config";
 import {
+  Activity,
   Apple,
-  Film,
-  Music,
+  Book,
   BookOpen,
   Code,
+  Film,
   Globe,
-  Activity,
-  Book,
   Monitor,
+  Music,
   Palette,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FC, useMemo } from "react";
+import { Button } from "./ui/Button";
 import { ScrollArea } from "./ui/ScrollArea";
+import { Category } from "@prisma/client";
+import Image from "next/image";
 
-interface SidebarItemsProps {}
+interface SidebarItemsProps {
+  categories: Category[];
+}
 
-const SidebarItems: FC<SidebarItemsProps> = ({}) => {
+const SidebarItems: FC<SidebarItemsProps> = ({ categories }) => {
   const pathname = usePathname();
 
-  const routes = useMemo(() => SIDEBAR_ITEMS, []);
-
-  const categories = useMemo(
-    () => [
-      {
-        label: "Cafeteria",
-        href: "/cafeteria",
-        icon: Apple,
-      },
-      {
-        label: "Orchestra",
-        href: "/orchestra",
-        icon: Music,
-      },
-      {
-        label: "English",
-        href: "/english",
-        icon: BookOpen,
-      },
-      {
-        label: "Math",
-        href: "/math",
-        icon: Code,
-      },
-      {
-        label: "Science",
-        href: "/science",
-        icon: Globe,
-      },
-      {
-        label: "History",
-        href: "/history",
-        icon: Film,
-      },
-      {
-        label: "Physical Education",
-        href: "/pe",
-        icon: Activity,
-      },
-      {
-        label: "Art",
-        href: "/art",
-        icon: Palette,
-      },
-      {
-        label: "Computer Science",
-        href: "/cs",
-        icon: Monitor,
-      },
-      {
-        label: "Library",
-        href: "/library",
-        icon: Book,
-      },
-    ],
-    []
-  );
+  const routes = SIDEBAR_ITEMS;
 
   return (
     <>
@@ -107,26 +54,39 @@ const SidebarItems: FC<SidebarItemsProps> = ({}) => {
       </div>
 
       <div className="px-3 py-2 h-fit hidden xl:block w-full">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-          Following
-        </h2>
-        <ScrollArea className="h-[250px]">
-          <div className="space-y-1 p-2">
-            {categories.map((item) => (
-              <Button
-                key={item.label}
-                asChild
-                variant={`${pathname === item.href ? "secondary" : "ghost"}`}
-                className="w-full flex justify-start"
-              >
-                <Link href={`${item.href}`}>
-                  <item.icon className="mr-2.5" strokeWidth={1} />
-                  <span className="hidden xl:inline">{item.label}</span>
-                </Link>
-              </Button>
-            ))}
-          </div>
-        </ScrollArea>
+        {categories.length > 0 && (
+          <>
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              Following
+            </h2>
+            <ScrollArea className="h-[250px]">
+              <div className="space-y-1 p-2">
+                {categories.map((category) => (
+                  <Button
+                    key={category.name}
+                    asChild
+                    variant={"ghost"}
+                    className="w-full flex justify-start"
+                  >
+                    <Link href={`/categories/${category.url}`}>
+                      <div className="rounded-full overflow-hidden h-[25px] w-[25px] mr-2">
+                        <Image
+                          src={category.image}
+                          alt="Category Icon"
+                          width={50}
+                          height={50}
+                          sizes="100vw"
+                          className="h-full w-auto rounded-full object-cover"
+                        />
+                      </div>
+                      <span className="hidden xl:inline">{category.name}</span>
+                    </Link>
+                  </Button>
+                ))}
+              </div>
+            </ScrollArea>
+          </>
+        )}
       </div>
     </>
   );

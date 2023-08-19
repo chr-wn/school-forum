@@ -25,24 +25,24 @@ export async function GET(req: Request) {
   }
 
   try {
-    const { limit, page, categoryName } = z
+    const { limit, page, categoryURL } = z
       .object({
         limit: z.string(),
         page: z.string(),
-        categoryName: z.string().nullish().optional(),
+        categoryURL: z.string().nullish().optional(),
       })
       .parse({
-        categoryName: url.searchParams.get("categoryName"),
+        categoryURL: url.searchParams.get("categoryURL"),
         limit: url.searchParams.get("limit"),
         page: url.searchParams.get("page"),
       });
 
     let whereClause = {};
 
-    if (categoryName) {
+    if (categoryURL) {
       whereClause = {
         category: {
-          name: categoryName,
+          name: categoryURL,
         },
       };
     } else if (session) {

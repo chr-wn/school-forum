@@ -93,6 +93,7 @@
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    box-sizing: border-box;
   }
 
   :root {
@@ -178,16 +179,8 @@
 }
 
 @layer components {
-  .hoverAnimation {
-    @apply dark:hover:bg-[#181818] hover:bg-[#e7e7e8] rounded-full cursor-pointer w-[52px] h-[52px] xl:w-auto xl:h-auto xl:py-3 xl:px-4 transition duration-200 ease-out;
-  }
-
   .basis-content {
     flex: 0 0 content;
-  }
-
-  .icon {
-    @apply cursor-pointer w-9 h-9 hover:bg-[#1d9bf0] hover:bg-opacity-10 flex items-center justify-center rounded-full transition ease-out;
   }
 }
 

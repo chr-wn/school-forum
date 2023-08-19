@@ -22,8 +22,8 @@ const CustomFeed = async () => {
   const posts = await db.post.findMany({
     where: {
       category: {
-        name: {
-          in: followedCategories.map((category) => category.category.name),
+        url: {
+          in: followedCategories.map((category) => category.category.url),
         },
       },
     },

@@ -186,7 +186,7 @@ export const Editor: React.FC<EditorProps> = ({ categoryId }) => {
 
   return (
     <>
-      <div className="w-full p-4 bg-background rounded-lg border border-zinc-200 mb-2">
+      <div className="w-full p-4 bg-background rounded-lg border border-zinc-200 mb-2 text-foreground">
         <form
           id="category-post-form"
           className="w-fit"
@@ -201,7 +201,7 @@ export const Editor: React.FC<EditorProps> = ({ categoryId }) => {
               }}
               {...rest}
               placeholder="Title"
-              className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
+              className="w-full resize-none appearance-none overflow-hidden bg-transparent text-xl font-bold focus:outline-none"
             />
             <div id="editor" className="min-h-[500px]" />
             <p className="text-sm text-gray-500">

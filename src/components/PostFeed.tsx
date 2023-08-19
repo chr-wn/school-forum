@@ -12,10 +12,10 @@ import Spinner from "./ui/Spinner";
 
 interface PostFeedProps {
   initialPosts: ExtendedPost[];
-  categoryName?: string;
+  categoryURL?: string;
 }
 
-const PostFeed: FC<PostFeedProps> = ({ initialPosts, categoryName }) => {
+const PostFeed: FC<PostFeedProps> = ({ initialPosts, categoryURL }) => {
   const lastPostRef = useRef<HTMLElement>(null);
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
@@ -28,7 +28,7 @@ const PostFeed: FC<PostFeedProps> = ({ initialPosts, categoryName }) => {
     async ({ pageParam = 1 }) => {
       const query =
         `/api/posts?limit=${INFINITE_SCROLL_PAGINATION_RESULTS}&page=${pageParam}` +
-        (!!categoryName ? `&categoryName=${categoryName}` : "");
+        (!!categoryURL ? `&categoryURL=${categoryURL}` : "");
 
       const { data } = await axios.get(query);
       return data as ExtendedPost[];
@@ -70,7 +70,7 @@ const PostFeed: FC<PostFeedProps> = ({ initialPosts, categoryName }) => {
               <Post
                 post={post}
                 commentAmt={post.comments.length}
-                categoryName={post.category.name}
+                category={post.category}
                 votesAmt={votesAmt}
                 currentVote={currentVote}
               />
@@ -82,7 +82,7 @@ const PostFeed: FC<PostFeedProps> = ({ initialPosts, categoryName }) => {
               key={post.id}
               post={post}
               commentAmt={post.comments.length}
-              categoryName={post.category.name}
+              category={post.category}
               votesAmt={votesAmt}
               currentVote={currentVote}
             />
