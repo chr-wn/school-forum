@@ -1,51 +1,48 @@
-import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { z } from "zod";
 
 export async function GET(req: Request) {
+  // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // await sleep(2000);
+
   const url = new URL(req.url);
 
-  const session = await getAuthSession();
-
-  let followedCategoriesIds: string[] = [];
-
-  if (session) {
-    const followedCategories = await db.follow.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        category: true,
-      },
-    });
-
-    followedCategoriesIds = followedCategories.map(
-      (follow) => follow.category.id
-    );
-  }
-
   try {
-    const { limit, page, categoryURL } = z
+    const { limit, page, userId, categoryURL } = z
       .object({
         limit: z.string(),
         page: z.string(),
+        userId: z.string().nullish().optional(),
         categoryURL: z.string().nullish().optional(),
       })
       .parse({
-        categoryURL: url.searchParams.get("categoryURL"),
         limit: url.searchParams.get("limit"),
         page: url.searchParams.get("page"),
+        userId: url.searchParams.get("userId"),
+        categoryURL: url.searchParams.get("categoryURL"),
       });
+
+    let followedCategoriesIds: string[] = [];
+
+    if (userId) {
+      const followedCategories = await db.follow.findMany({
+        where: {
+          userId: userId,
+        },
+        include: {
+          category: true,
+        },
+      });
+
+      followedCategoriesIds = followedCategories.map(
+        (follow) => follow.category.id
+      );
+    }
 
     let whereClause = {};
 
-    if (categoryURL) {
-      whereClause = {
-        category: {
-          name: categoryURL,
-        },
-      };
-    } else if (session) {
+    if (userId) {
       whereClause = {
         category: {
           id: {
@@ -53,6 +50,14 @@ export async function GET(req: Request) {
           },
         },
       };
+    } else if (categoryURL) {
+      whereClause = {
+        category: {
+          url: categoryURL,
+        },
+      };
+    } else {
+      whereClause = {};
     }
 
     const posts = await db.post.findMany({

@@ -1,25 +1,13 @@
 "use client";
 
 import { SIDEBAR_ITEMS } from "@/config";
-import {
-  Activity,
-  Apple,
-  Book,
-  BookOpen,
-  Code,
-  Film,
-  Globe,
-  Monitor,
-  Music,
-  Palette,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FC, useMemo } from "react";
-import { Button } from "./ui/Button";
-import { ScrollArea } from "./ui/ScrollArea";
 import { Category } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FC } from "react";
+import { Button } from "./ui/Button";
+import { ScrollArea } from "./ui/ScrollArea";
 
 interface SidebarItemsProps {
   categories: Category[];
@@ -59,7 +47,7 @@ const SidebarItems: FC<SidebarItemsProps> = ({ categories }) => {
             <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
               Following
             </h2>
-            <ScrollArea className="h-[250px]">
+            <ScrollArea className="h-[200px]">
               <div className="space-y-1 p-2">
                 {categories.map((category) => (
                   <Button

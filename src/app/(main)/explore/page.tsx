@@ -16,7 +16,7 @@ const page = async () => {
   const categories = await db.category.findMany();
 
   return (
-    <Command className="relative rounded-lg border z-50 overflow-visible">
+    <Command className="relative rounded-none z-50 overflow-visible">
       <CommandInput
         className="outline-none border-none focus:border-none focus:outline-none ring-0"
         placeholder="Search all categories"

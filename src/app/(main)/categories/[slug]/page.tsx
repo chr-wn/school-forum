@@ -1,9 +1,6 @@
 import MiniCreatePost from "@/components/MiniCreatePost";
-import PostFeed from "@/components/PostFeed";
-import { INFINITE_SCROLL_PAGINATION_RESULTS } from "@/config";
+import CategoryFeed from "@/components/feeds/CategoryFeed";
 import { getAuthSession } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
 
 interface PageProps {
   params: {
@@ -16,30 +13,9 @@ const page: React.FC<PageProps> = async ({ params }) => {
 
   const session = await getAuthSession();
 
-  const category = await db.category.findFirst({
-    where: { url: slug },
-    include: {
-      posts: {
-        include: {
-          author: true,
-          votes: true,
-          comments: true,
-          category: true,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: INFINITE_SCROLL_PAGINATION_RESULTS,
-      },
-    },
-  });
-
-  if (!category) return notFound();
-
   return (
     <>
-      <MiniCreatePost session={session} />
-      <PostFeed initialPosts={category.posts} categoryURL={category.url} />
+      <CategoryFeed userSession={session} categoryURL={slug} />
     </>
   );
 };

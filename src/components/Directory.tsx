@@ -15,9 +15,16 @@ const Directory: FC = async () => {
     },
   });
 
-  const categories = follows.map((follow) => follow.category);
+  const categories = await db.category.findMany();
 
-  return <DirectoryMenu categories={categories} />;
+  const followingCategories = follows.map((follow) => follow.category);
+
+  return (
+    <DirectoryMenu
+      followingCategories={followingCategories}
+      categories={categories}
+    />
+  );
 };
 
 export default Directory;

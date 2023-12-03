@@ -17,7 +17,7 @@
     {
       "label": "Run Prisma Studio",
       "type": "shell",
-      "command": "npx prisma studio",
+      "command": "npx prisma studio --browser none",
       "presentation": {
         "reveal": "silent",
         "panel": "new"

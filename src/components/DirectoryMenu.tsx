@@ -10,7 +10,6 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
   CommandSeparator,
 } from "@/components/ui/Command";
 import {
@@ -25,11 +24,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea } from "./ui/ScrollArea";
 
-interface SearchBarProps {
+interface DirectoryMenuProps {
+  followingCategories: Category[];
   categories: Category[];
 }
 
-const SearchBar: FC<SearchBarProps> = ({ categories }) => {
+const DirectoryMenu: FC<DirectoryMenuProps> = ({
+  followingCategories,
+  categories,
+}) => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -54,10 +57,14 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
               className="h-full w-auto rounded-full object-cover"
             />
           </div>
-          {path[2]}
+          {
+            categories.find((category) => {
+              return category.url === path[2];
+            })?.name
+          }
         </>
       );
-    } else if (path.length === 2) {
+    } else {
       const Icon = SIDEBAR_ITEMS.find((item) => {
         return (
           item.label === path[1].charAt(0).toUpperCase() + path[1].slice(1)
@@ -95,53 +102,55 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
               placeholder="Filter"
             />
 
-            <ScrollArea className={`${categories.length > 5 && "h-[250px]"}`}>
-              <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup heading="Navigation">
-                  {SIDEBAR_ITEMS.map((item) => (
-                    <CommandItem key={item.label} className="w-full h-full">
-                      <Link
-                        href={`${item.href}`}
-                        className="flex items-center w-full"
+            <ScrollArea
+              className={`${followingCategories.length > 5 && "h-[250px]"}`}
+            >
+              {/* <CommandList> */}
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="Navigation">
+                {SIDEBAR_ITEMS.map((item) => (
+                  <CommandItem key={item.label} className="w-full h-full">
+                    <Link
+                      href={`${item.href}`}
+                      className="flex items-center w-full"
+                    >
+                      <item.icon className="mr-2.5 inline" strokeWidth={1} />
+                      <span>{item.label}</span>
+                    </Link>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              {followingCategories.length > 0 && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup heading="Following">
+                    {followingCategories.map((category) => (
+                      <CommandItem
+                        key={category.id}
+                        className="w-full h-full py-0"
                       >
-                        <item.icon className="mr-2.5 inline" strokeWidth={1} />
-                        <span>{item.label}</span>
-                      </Link>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-                {categories.length > 0 && (
-                  <>
-                    <CommandSeparator />
-                    <CommandGroup heading="Following">
-                      {categories.map((category) => (
-                        <CommandItem
-                          key={category.id}
-                          className="w-full h-full py-0"
+                        <Link
+                          href={`/categories/${category.url}`}
+                          className="h-full w-full py-1.5 flex items-center"
                         >
-                          <Link
-                            href={`/categories/${category.url}`}
-                            className="h-full w-full py-1.5 flex items-center"
-                          >
-                            <div className="rounded-full overflow-hidden h-[25px] w-[25px] mr-2">
-                              <Image
-                                src={category.image}
-                                alt="Category Icon"
-                                width={50}
-                                height={50}
-                                sizes="100vw"
-                                className="inline h-full w-auto rounded-full object-cover"
-                              />
-                            </div>
-                            {category.name}
-                          </Link>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </>
-                )}
-              </CommandList>
+                          <div className="rounded-full overflow-hidden h-[25px] w-[25px] mr-2">
+                            <Image
+                              src={category.image}
+                              alt="Category Icon"
+                              width={50}
+                              height={50}
+                              sizes="100vw"
+                              className="inline h-full w-auto rounded-full object-cover"
+                            />
+                          </div>
+                          {category.name}
+                        </Link>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </>
+              )}
+              {/* </CommandList> */}
             </ScrollArea>
           </Command>
         </PopoverContent>
@@ -150,4 +159,4 @@ const SearchBar: FC<SearchBarProps> = ({ categories }) => {
   );
 };
 
-export default SearchBar;
+export default DirectoryMenu;

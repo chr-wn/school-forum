@@ -41,7 +41,7 @@ export default function UserAuthForm({
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setFormLoading(true);
-
+    signIn();
     setTimeout(() => {
       setFormLoading(false);
     }, 3000);
@@ -63,6 +63,7 @@ export default function UserAuthForm({
               autoComplete="email"
               autoCorrect="off"
               disabled={formLoading}
+              className="cursor-not-allowed"
             />
             <Input
               id="password"
@@ -71,6 +72,7 @@ export default function UserAuthForm({
               autoCapitalize="none"
               autoCorrect="off"
               disabled={formLoading}
+              className="cursor-not-allowed"
             />
             {pathname === "/" && (
               <Input
@@ -80,10 +82,15 @@ export default function UserAuthForm({
                 autoCapitalize="none"
                 autoCorrect="off"
                 disabled={formLoading}
+                className="cursor-not-allowed"
               />
             )}
           </div>
-          <Button disabled={formLoading}>
+          <Button
+            // disabled={formLoading}
+            className="cursor-not-allowed"
+            disabled={true}
+          >
             {formLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}

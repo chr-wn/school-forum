@@ -1,5 +1,5 @@
 import { Icons } from "@/components/ui/Icons";
-import { ImageResponse } from "next/server";
+import { ImageResponse } from "next/og";
 
 // Route segment config
 export const runtime = "edge";
@@ -16,7 +16,12 @@ export default function Icon() {
   return new ImageResponse(
     (
       // ImageResponse JSX element
-      <div className="text-[24px] bg-black w-full h-full flex items-center justify-center text-white">
+      <div
+        style={{
+          display: "flex",
+          background: "white",
+        }}
+      >
         <Icons.logo />
       </div>
     ),

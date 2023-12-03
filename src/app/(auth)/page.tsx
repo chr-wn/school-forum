@@ -9,18 +9,18 @@ export const metadata: Metadata = {
   title: "Website Title",
 };
 
-export default function AuthenticationPage() {
+export default async function AuthenticationPage() {
   return (
     <>
-      <Link
-        href="/login"
+      {/* <Link
+        href="/"
         className={cn(
-          buttonVariants({ variant: "ghost" }),
+          buttonVariants({ variant: "ghost"}),
           "absolute right-4 top-4 md:right-8 md:top-8"
         )}
       >
         Login
-      </Link>
+      </Link> */}
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">

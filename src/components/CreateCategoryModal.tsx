@@ -73,6 +73,11 @@ export default function CreateCategoryModal() {
     },
     onSuccess: (data) => {
       router.push(`/categories/${data}`);
+      toast({
+        title: "Success!",
+        description: `${data} is now a category.`,
+        variant: "default",
+      });
     },
   });
 

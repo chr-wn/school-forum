@@ -23,14 +23,6 @@ const CategoryInfo: React.FC<CategoryInfoProps> = async ({ slug, user }) => {
 
   const category = await db.category.findFirst({
     where: { url: slug },
-    include: {
-      posts: {
-        include: {
-          author: true,
-          votes: true,
-        },
-      },
-    },
   });
 
   const follow = !session?.user

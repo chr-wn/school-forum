@@ -1,16 +1,17 @@
-import CustomFeed from "@/components/CustomFeed";
-import MiniCreatePost from "@/components/MiniCreatePost";
+import Directory from "@/components/Directory";
+import NavbarHomeCombiner from "@/components/NavbarHomeCombiner";
 import { getAuthSession } from "@/lib/auth";
 
-const Home = async () => {
+const page = async () => {
   const session = await getAuthSession();
 
   return (
     <>
-      <MiniCreatePost session={session} />
-      <CustomFeed />
+      <NavbarHomeCombiner userSession={session}>
+        <Directory />
+      </NavbarHomeCombiner>
     </>
   );
 };
 
-export default Home;
+export default page;

@@ -1,18 +1,18 @@
-import Directory from "@/components/Directory";
 import { Sidebar } from "@/components/Sidebar";
 import { Toaster } from "@/components/ui/Toaster";
-import "@/styles/globals.css";
 
 export const metadata = {
   title: "Home | WebsiteTitle",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
   widgets,
+  navbar,
 }: {
   children: React.ReactNode;
   widgets: React.ReactNode;
+  navbar: React.ReactNode;
 }) {
   return (
     <>
@@ -20,9 +20,7 @@ export default function RootLayout({
         <Sidebar />
 
         <div className="text-primary flex-grow border-l border-r border-border max-w-2xl">
-          <div className="text-primary flex items-center sm:justify-between py-2 px-3 sticky top-0 z-50 bg:background border-b border-border backdrop-blur">
-            <Directory />
-          </div>
+          {navbar}
           {children}
         </div>
 

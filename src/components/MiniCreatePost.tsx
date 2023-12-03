@@ -18,7 +18,7 @@ const MiniCreatePost: FC<MiniCreatePostProps> = ({ session }) => {
   const pathname = usePathname();
 
   return (
-    <div className="h-fit px-6 py-4 flex justify-between gap-6 items-center border-b">
+    <div className="h-fit px-6 py-4 flex justify-between gap-6 items-center border">
       <div className="relative">
         <Link href="/profile">
           <UserAvatar
