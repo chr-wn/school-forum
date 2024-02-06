@@ -1,3 +1,10 @@
+<br /><hr /><br />
+
+## The website is currently hosted at [https://schoolforum.vercel.app](https://schoolforum.vercel.app/).
+
+<br /><hr /><br />
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
